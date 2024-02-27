@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "utils_anviks"
-version = "0.0.13"
+version = "1.0.0"
 authors = [
-    { name = "Andreas Marten Viks", email = "andreasviks1@gmail.com" },
+    { name = "Andreas Marten Viks", email = "andreasviks0@gmail.com" },
 ]
 description = "A collection of utility functions"
 readme = "README.md"
@@ -16,9 +16,11 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = [
-]
+dependencies = []
+
+[tool.hatch.build]
+exclude = []
 
 [project.urls]
-"Homepage" = "https://github.com/andreas-viks"
-"Bug Tracker" = "https://github.com/andreas-viks"
+"Homepage" = "https://github.com/anviks/utility_package/"
+"Issues" = "https://github.com/anviks/utility_package/issues"
