@@ -1,27 +1,65 @@
-# Utilities by anviks
+# utils-anviks
 
-This package contains some useful functions and decorators.
+Useful decorators and functions for everyday Python programming.
 
-### Features in `decorators.py`:
-- `@stopwatch` decorator to measure execution time of a function
-- `@read_data` decorator to read data from file and pass it to a function
-- `@catch` decorator to catch exceptions, that can be raised by a function
-- `@memoize` decorator to cache function results
-- `@enforce_types` decorator to check types of function arguments and return value (raises TypeError if types don't match)
+## Features:
+### Decorators:
+- `@stopwatch` measures execution time of a function
+- `@read_file` reads file content and passes it to the decorated function
+- `@catch` catches exceptions from a function
+- `@memoize` caches function results (only works with one positional hashable argument)
+- `@enforce_types` checks types of function arguments and return value (raises TypeError if types don't match)
 
-### Features in `b64coder.py`:
-- `b64encode` function to encode a string to base64
-- `b64decode` function to decode a base64 string to a readable string
+### Functions:
+- `b64encode` encodes a string to a base64 string a specified number of times
+- `b64decode` decodes a base64 string a specified number of times
+- `tm_snapshot_to_string` builds a readable string from the given `tracemalloc` snapshot
 
-### Features in `memory_profiler.py`:
-- `display_tm_snapshot` displays the top memory allocations from a tracemalloc snapshot.
-
-### Installation
+## Installation
 ```bash
 pip install utils-anviks
 ```
 
-### Usage
+## Usage
+
 ```python
-from utils_anviks import *
+import tracemalloc
+from utils_anviks import stopwatch, read_file, catch, memoize, enforce_types, b64encode, b64decode, \
+    tm_snapshot_to_string
+
+
+@stopwatch
+def some_function():
+    pass
+
+
+@read_file('file.txt')
+def some_function(file_content):
+    pass
+
+
+@catch
+def some_function():
+    pass
+
+
+@memoize
+def some_function(n):
+    pass
+
+
+@enforce_types
+def some_function(n: int) -> int:
+    pass
+
+
+b64encode('string', 3)  # 'WXpOU2VXRlhOVzQ9'
+b64decode('WXpOU2VXRlhOVzQ9', 3)  # 'string'
+
+tracemalloc.start()
+arr = [i for i in range(1000000)]  # random memory allocation
+snapshot = tracemalloc.take_snapshot()
+tracemalloc.stop()
+
+print(tm_snapshot_to_string(snapshot))
 ```

@@ -1,7 +1,7 @@
 import base64
 
 
-def b64encode(text: str, times_to_encode: int = 20) -> str:
+def b64encode(text: str, times_to_encode: int = 1) -> str:
     """
     Encode the given text using base64 encoding.
     :param text: The text to encode.
@@ -14,7 +14,7 @@ def b64encode(text: str, times_to_encode: int = 20) -> str:
     return text
 
 
-def b64decode(text: str, times_to_decode: int = 20) -> str:
+def b64decode(text: str, times_to_decode: int = 1) -> str:
     """
     Decode the given text using base64 encoding.
     :param text: The text to decode.
