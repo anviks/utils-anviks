@@ -22,6 +22,6 @@ dependencies = []
 exclude = []
 
 [project.urls]
-"Homepage" = "https://github.com/anviks/utility_package/"
-"Issues" = "https://github.com/anviks/utility_package/issues"
-"Changelog" = "https://github.com/anviks/utility_package/blob/master/CHANGELOG.md"
+"Homepage" = "https://github.com/anviks/utils-anviks/"
+"Issues" = "https://github.com/anviks/utils-anviks/issues"
+"Changelog" = "https://github.com/anviks/utils-anviks/blob/master/CHANGELOG.md"
