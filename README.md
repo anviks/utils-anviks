@@ -4,7 +4,7 @@ Useful decorators and functions for everyday Python programming.
 
 ## Features:
 ### Decorators:
-- `@stopwatch` measures execution time of a function
+- `@stopwatch` measures execution time of a function (upon being called) and prints the time taken in seconds to the console
 - `@read_file` reads file content and passes it to the decorated function
 - `@catch` catches exceptions from a function
 - `@memoize` caches function results (only works with one positional hashable argument)
