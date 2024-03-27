@@ -18,14 +18,25 @@ def stopwatch(func):
     :param func: The decorated function.
     :return: Inner function.
     """
+    recursion_counter = 0
+    start = 0
 
     @wraps(func)
     def wrapper(*args, **kwargs):
-        start = time.perf_counter()
+        nonlocal recursion_counter, start
+
+        if recursion_counter == 0:
+            start = time.perf_counter()
+
+        recursion_counter += 1
         result = func(*args, **kwargs)
-        end = time.perf_counter()
-        seconds = end - start
-        print(f"It took {seconds} seconds for {func.__name__} to run")
+        recursion_counter -= 1
+
+        if recursion_counter == 0:
+            end = time.perf_counter()
+            seconds = end - start
+            print(f"It took {seconds} seconds for {func.__name__} to run")
+
         return result
 
     return wrapper
@@ -55,7 +66,7 @@ def memoize(func):
     return wrapper
 
 
-def read_file(filename: str, *, sep: str = "\n", sep2: str = None, sep3: str = None, _class: type = str,
+def read_file(filename: str, *, sep: str = "\n", sep2: str | None = None, sep3: str | None = None, _class: type = str,
               auto_annotate: bool = False):
     """
     Read file contents and pass them to the decorated function as the first argument.
