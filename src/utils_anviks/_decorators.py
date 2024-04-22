@@ -3,6 +3,7 @@ import inspect
 import sys
 import time
 import typing
+import warnings
 from functools import wraps
 
 
@@ -69,7 +70,11 @@ def memoize(func):
 def read_file(filename: str, *, sep: str = "\n", sep2: str | None = None, sep3: str | None = None, _class: type = str,
               auto_annotate: bool = False):
     """
-    Read file contents and pass them to the decorated function as the first argument.
+    [DEPRECATED] Read file contents and pass them to the decorated function as the first argument.
+    
+    This decorator is deprecated in favor of the `parse_file_content` function. Please use `parse_file_content` instead.
+    The reason for deprecation is that maintaining this as a decorator adds unnecessary complexity, especially for use with classes.
+    The `parse_file_content` function provides equivalent functionality without the need for decoration and works universally.
 
     The data will be read from the file with the given filename.
     The data will be split by the given separator (default: newline).
@@ -88,6 +93,9 @@ def read_file(filename: str, *, sep: str = "\n", sep2: str | None = None, sep3: 
     :return: Inner function.
     :raises ValueError: If the higher dimension separators are specified without the lower dimension separators.
     """
+    warnings.warn(
+        "This decorator is deprecated in favor of the `parse_file_content` function. Please use `parse_file_content` instead.",
+        DeprecationWarning, stacklevel=2)
 
     def decorator(func):
         if sep3 is not None and sep2 is None \

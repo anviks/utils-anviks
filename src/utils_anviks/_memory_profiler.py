@@ -2,6 +2,7 @@ import linecache
 import os
 import tracemalloc
 
+BYTES_IN_KIBIBYTE = 1024
 
 def tm_snapshot_to_string(snapshot: tracemalloc.Snapshot, key_type='lineno', limit=3) -> str:
     """
@@ -23,7 +24,7 @@ def tm_snapshot_to_string(snapshot: tracemalloc.Snapshot, key_type='lineno', lim
         frame = stat.traceback[0]
         filename = os.sep.join(frame.filename.split(os.sep)[-2:])
         report.append("#%s: %s:%s: %.1f KiB"
-                      % (index, filename, frame.lineno, stat.size / 1024))
+                      % (index, filename, frame.lineno, stat.size / BYTES_IN_KIBIBYTE))
         line = linecache.getline(frame.filename, frame.lineno).strip()
         if line:
             report.append('    %s' % line)
@@ -31,8 +32,8 @@ def tm_snapshot_to_string(snapshot: tracemalloc.Snapshot, key_type='lineno', lim
     other = top_stats[limit:]
     if other:
         size = sum(stat.size for stat in other)
-        report.append("%s other: %.1f KiB" % (len(other), size / 1024))
+        report.append("%s other: %.1f KiB" % (len(other), size / BYTES_IN_KIBIBYTE))
     total = sum(stat.size for stat in top_stats)
-    report.append("Total allocated size: %.1f KiB" % (total / 1024))
+    report.append("Total allocated size: %.1f KiB" % (total / BYTES_IN_KIBIBYTE))
 
     return '\n'.join(report)
