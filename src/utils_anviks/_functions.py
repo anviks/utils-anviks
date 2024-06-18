@@ -1,64 +1,91 @@
-def parse_file_content(filename: str, *, sep: str = "\n", sep2: str | None = None, sep3: str | None = None,
-                       _class: type = str):
-    """
-    Read file contents and parse them.
+import base64
+from typing import TypeVar, Type
 
-    The data will be read from the file with the given filename.
-    The data will be split by the given separator (default: newline).
-    If the data is two-dimensional, the second dimension will be split by the given separator (default: None).
-    If the data is three-dimensional, the third dimension will be split by the given separator (default: None).
-    The data will be converted to the given type (default: str) and returned.
+T = TypeVar('T')
 
-    :param filename: The name of the file to read the data from.
-    :param sep: The separator to split the data by.
-    :param sep2: The separator of the second dimension or None.
-    :param sep3: The separator of the third dimension or None.
-    :param _class: The type to convert the data to.
-    :return: Inner function.
-    :raises ValueError: If the higher dimension separators are specified without the lower dimension separators.
+Separators = (tuple[str] | tuple[str, str] | tuple[str, str, str] | tuple[str, str, str, str]
+              | tuple[str, str, str, str, str])
+ParseResult = T | list[T | list[T | list[T | list[T | list[T]]]]]
+
+
+def parse_string(string: str, separators: Separators, target_type: Type[T]) -> ParseResult[T]:
+    r"""
+    Parse a string (split by separators and convert to the given type).
+
+    The string will be split by the given separators. The amount of separators will determine the dimension of the list.
+    For example, if separators = ("\\n", ","), the content will be split by newline and each resulting substring will be
+    split by comma, forming a two-dimensional list.
+    The substrings will then be converted to the given type (default: str) and returned.
+    The function can handle any number of separators/dimensions, but since recursive typing is not widely supported,
+    the type hinting is limited to five dimensions.
+
+    :param string: The string to parse.
+    :param separators: The separators to split the content by.
+    :param target_type: The type to convert the content to.
+    :return: The result of the parsing and conversion.
     """
-    if sep3 is not None and sep2 is None \
-            or sep2 is not None and sep is None:
-        raise ValueError(
-            "Higher dimension separators cannot be specified if the lower dimension separators are not specified")
+    processed_data: ParseResult = string
+
+    if not separators:
+        if target_type != str:
+            processed_data = target_type(processed_data)
+        return processed_data
+
+    if separators[0] == "":
+        processed_data = list(processed_data)
+    else:
+        processed_data = processed_data.split(separators[0])
+
+    return [parse_string(substr, separators=separators[1:], target_type=target_type) for substr in processed_data]
+
+
+def parse_file_content(filename: str, separators: Separators, target_type: type[T]) -> ParseResult[T]:
+    r"""
+    Read file content and parse it (split by separators and convert to the given type).
+
+    The string will be read from the file with the given filename.
+    The string will be split by the given separators. The amount of separators will determine the dimension of the list.
+    For example, if separators = ("\\n", ","), the content will be split by newline and each resulting substring will be
+    split by comma, forming a two-dimensional list.
+    The substrings will then be converted to the given type (default: str) and returned.
+    The function can handle any number of separators/dimensions, but since recursive typing is not widely supported,
+    the type hinting is limited to five dimensions.
+
+    :param filename: The name of the file to read the content from.
+    :param separators: The separators to split the content by.
+    :param target_type: The type to convert the content to.
+    :return: The result of the parsing and conversion.
+    """
+    if target_type is None:
+        target_type = str
 
     with open(filename) as file:
-        lines = file.read().split(sep)
+        file_content = file.read()
 
-    if sep2 is None:
-        if _class == str:
-            processed_data = lines
-        else:
-            processed_data = [_class(row) for row in lines]
-    else:
-        if sep2 == "":
-            split_lines = [list(line) for line in lines]
-        else:
-            split_lines = [line.split(sep2) for line in lines]
+    return parse_string(file_content, separators, target_type)
 
-        if sep3 is None:
-            if _class == str:
-                processed_data = split_lines
-            else:
-                processed_data = [
-                    [_class(element) for element in row]
-                    for row in split_lines
-                ]
-        else:
-            if sep3 == "":
-                split_lines = [[list(column) for column in row] for row in split_lines]
-            else:
-                split_lines = [[column.split(sep3) for column in row] for row in split_lines]
 
-            if _class == str:
-                processed_data = split_lines
-            else:
-                processed_data = [
-                    [
-                        [_class(element) for element in column]
-                        for column in row
-                    ]
-                    for row in split_lines
-                ]
+def b64encode(text: str, times_to_encode: int = 1) -> str:
+    """
+    Encode the given text using base64 encoding.
+    :param text: The text to encode.
+    :param times_to_encode: The number of times to encode the text.
+    :return: The encoded text.
+    """
+    for _ in range(times_to_encode):
+        text = base64.b64encode(text.encode("utf-8")).decode("utf-8")
 
-    return processed_data
+    return text
+
+
+def b64decode(text: str, times_to_decode: int = 1) -> str:
+    """
+    Decode the given text using base64 encoding.
+    :param text: The text to decode.
+    :param times_to_decode: The number of times to decode the text.
+    :return: The decoded text.
+    """
+    for _ in range(times_to_decode):
+        text = base64.b64decode(text).decode("utf-8")
+
+    return text
