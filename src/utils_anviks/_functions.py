@@ -1,21 +1,14 @@
 import base64
-from typing import TypeVar, Type
-
-T = TypeVar('T')
-
-Separators = (tuple[str] | tuple[str, str] | tuple[str, str, str] | tuple[str, str, str, str]
-              | tuple[str, str, str, str, str])
-ParseResult = T | list[T | list[T | list[T | list[T | list[T]]]]]
 
 
-def parse_string(string: str, separators: Separators, target_type: Type[T]) -> ParseResult[T]:
+def parse_string(string, separators, target_type):
     r"""
     Parse a string (split by separators and convert to the given type).
 
     The string will be split by the given separators. The amount of separators will determine the dimension of the list.
     For example, if separators = ("\\n", ","), the content will be split by newline and each resulting substring will be
     split by comma, forming a two-dimensional list.
-    The substrings will then be converted to the given type (default: str) and returned.
+    The substrings will then be converted to the given type and returned.
     The function can handle any number of separators/dimensions, but since recursive typing is not widely supported,
     the type hinting is limited to five dimensions.
 
@@ -24,7 +17,7 @@ def parse_string(string: str, separators: Separators, target_type: Type[T]) -> P
     :param target_type: The type to convert the content to.
     :return: The result of the parsing and conversion.
     """
-    processed_data: ParseResult = string
+    processed_data = string
 
     if not separators:
         if target_type != str:
@@ -39,7 +32,7 @@ def parse_string(string: str, separators: Separators, target_type: Type[T]) -> P
     return [parse_string(substr, separators=separators[1:], target_type=target_type) for substr in processed_data]
 
 
-def parse_file_content(filename: str, separators: Separators, target_type: type[T]) -> ParseResult[T]:
+def parse_file_content(filename, separators, target_type):
     r"""
     Read file content and parse it (split by separators and convert to the given type).
 
@@ -47,7 +40,7 @@ def parse_file_content(filename: str, separators: Separators, target_type: type[
     The string will be split by the given separators. The amount of separators will determine the dimension of the list.
     For example, if separators = ("\\n", ","), the content will be split by newline and each resulting substring will be
     split by comma, forming a two-dimensional list.
-    The substrings will then be converted to the given type (default: str) and returned.
+    The substrings will then be converted to the given type and returned.
     The function can handle any number of separators/dimensions, but since recursive typing is not widely supported,
     the type hinting is limited to five dimensions.
 
@@ -65,7 +58,7 @@ def parse_file_content(filename: str, separators: Separators, target_type: type[
     return parse_string(file_content, separators, target_type)
 
 
-def b64encode(text: str, times_to_encode: int = 1) -> str:
+def b64encode(text, times_to_encode=1):
     """
     Encode the given text using base64 encoding.
     :param text: The text to encode.
@@ -78,7 +71,7 @@ def b64encode(text: str, times_to_encode: int = 1) -> str:
     return text
 
 
-def b64decode(text: str, times_to_decode: int = 1) -> str:
+def b64decode(text, times_to_decode=1):
     """
     Decode the given text using base64 encoding.
     :param text: The text to decode.

@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "utils_anviks"
-version = "2.0.0"
+version = "2.0.1"
 authors = [
     { name = "Andreas Marten Viks", email = "andreasviks0@gmail.com" },
 ]
-description = "A collection of utility functions"
+description = "A collection of utilities"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [

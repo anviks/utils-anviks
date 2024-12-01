@@ -5,16 +5,19 @@ Useful decorators and functions for everyday Python programming.
 ## Features:
 ### Decorators:
 - `@stopwatch` measures execution time of a function (upon being called) and prints the time taken in seconds to the console.
-- `@read_file` reads file content and passes it to the decorated function.
 - `@catch` catches exceptions from a function.
-- `@memoize` caches function results (only works with one positional hashable argument).
 - `@enforce_types` checks types of function arguments and return value (raises TypeError if types don't match).
 
 ### Functions:
+- `parse_string` splits a string by separators and converts to the given type.
+- `parse_file_content` same as `parse_string`, but parses file content instead of a string.
 - `b64encode` encodes a string to a base64 string a specified number of times.
 - `b64decode` decodes a base64 string a specified number of times.
+- `dict_to_object` converts a dictionary to an object, based on given type argument.
 - `tm_snapshot_to_string` builds a readable string from the given `tracemalloc` snapshot.
-- `parse_file_content` reads file content and parses it using the provided arguments. It is an alternative to the `@read_file` decorator.
+
+### Classes:
+- `CaptureMalloc` captures memory allocations within a block of code (context manager).
 
 ## Installation
 ```bash
@@ -24,44 +27,51 @@ pip install utils-anviks
 ## Usage
 
 ```python
+import time
 import tracemalloc
-from utils_anviks import stopwatch, read_file, catch, memoize, enforce_types, b64encode, b64decode, \
-    tm_snapshot_to_string, parse_file_content
+from utils_anviks import stopwatch, catch, enforce_types, parse_string, parse_file_content, b64encode, b64decode, \
+    dict_to_object, tm_snapshot_to_string, CaptureMalloc
 
 
 @stopwatch
-def some_function():
-    pass
+def foo():
+    time.sleep(1.23)
 
 
-@read_file('file.txt')
-def some_function(file_content):
-    pass
-
-
-@catch
-def some_function():
-    pass
-
-
-@memoize
-def some_function(n):
-    pass
+@catch(TypeError, ZeroDivisionError)
+def bar(n: int):
+    return 1 / n
 
 
 @enforce_types
-def some_function(n: int) -> int:
+def baz(n: int) -> int:
     pass
 
 
-b64encode('string', 3)  # 'WXpOU2VXRlhOVzQ9'
-b64decode('WXpOU2VXRlhOVzQ9', 3)  # 'string'
+foo()  # Time taken by the function to execute is printed to the console
+print(bar(0))  # Catches ZeroDivisionError and returns (1, [error object])
+baz('string')  # Raises TypeError
+
+print(parse_string('111,222,333\n64,59,13', ('\n', ','), int))  # [[111, 222, 333], [64, 59, 13]]
+print(parse_file_content('file.txt', ('\n', ','), int))  # Same as above, but reads from a file
+
+print(b64encode('string', 3))  # 'WXpOU2VXRlhOVzQ9'
+print(b64decode('WXpOU2VXRlhOVzQ9', 3))  # 'string'
+
+class Foo:
+    a: int
+    b: str
+    
+print(dict_to_object({'a': 1, 'b': 'string'}, Foo))  # Foo(a=1, b='string')
 
 tracemalloc.start()
-arr = [i for i in range(1000000)]  # random memory allocation
+arr1 = [i for i in range(100_000)]  # random memory allocation
 snapshot = tracemalloc.take_snapshot()
 tracemalloc.stop()
 print(tm_snapshot_to_string(snapshot))
 
-parse_file_content('file.txt', _class=int)  # [1, 2, 3, 4, 5]
+with CaptureMalloc() as cm:
+    arr2 = [i for i in range(100_000)]  # random memory allocation
+print(cm.snapshot_string)
+
 ```
