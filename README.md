@@ -65,13 +65,13 @@ class Foo:
 print(dict_to_object({'a': 1, 'b': 'string'}, Foo))  # Foo(a=1, b='string')
 
 tracemalloc.start()
-arr1 = [i for i in range(100_000)]  # random memory allocation
+arr1 = [i for i in range(100_000)]  # Arbitrarily chosen memory allocation
 snapshot = tracemalloc.take_snapshot()
 tracemalloc.stop()
 print(tm_snapshot_to_string(snapshot))
 
 with CaptureMalloc() as cm:
-    arr2 = [i for i in range(100_000)]  # random memory allocation
+    arr2 = [i for i in range(100_000)]  # Arbitrarily chosen memory allocation
 print(cm.snapshot_string)
 
 ```
