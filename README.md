@@ -18,6 +18,8 @@ Useful decorators and functions for everyday Python programming.
 
 ### Classes:
 - `CaptureMalloc` captures memory allocations within a block of code (context manager).
+- `Cell` represents a location in a 2-dimensional grid, with attributes for `row` and `column`.
+- `Grid` represents a 2-dimensional grid, provides various operations to manipulate and query the grid.
 
 ## Installation
 ```bash
@@ -30,7 +32,7 @@ pip install utils-anviks
 import time
 import tracemalloc
 from utils_anviks import stopwatch, catch, enforce_types, parse_string, parse_file_content, b64encode, b64decode, \
-    dict_to_object, tm_snapshot_to_string, CaptureMalloc
+    dict_to_object, tm_snapshot_to_string, CaptureMalloc, Grid, Cell
 
 
 @stopwatch
@@ -73,5 +75,36 @@ print(tm_snapshot_to_string(snapshot))
 with CaptureMalloc() as cm:
     arr2 = [i for i in range(100_000)]  # Arbitrarily chosen memory allocation
 print(cm.snapshot_string)
+# Top 3 lines
+# #1: AOC\dsjdfskld.py:41: 3.8 MiB
+#     arr2 = [i for i in range(100_000)]  # Arbitrarily chosen memory allocation
+# Total allocated size: 3.8 MiB
 
+
+print(Cell(5, 5).neighbours('cardinal'))
+# (Cell(row=4, column=5), Cell(row=5, column=6), Cell(row=6, column=5), Cell(row=5, column=4))
+print(Cell(3, 2).up.up.up.left.left)
+# Cell(row=0, column=0)
+
+print(grid := Grid.gradient_by_step(5, 5, 3, 2, 'diagonal'))
+# Grid(
+#     [3, 5, 7, 9, 11],
+#     [5, 7, 9, 11, 13],
+#     [7, 9, 11, 13, 15],
+#     [9, 11, 13, 15, 17],
+#     [11, 13, 15, 17, 19],
+# )
+print(grid := grid.map(lambda cell, value: 'X' if cell.is_neighbour(Cell(2, 3), 'all') else ' ').join_to_str())
+#      
+#   XXX
+#   X X
+#   XXX
+#      
+grid[list(grid.find('X'))] = 'O'
+print(grid.join_to_str())
+#      
+#   OOO
+#   O O
+#   OOO
+#      
 ```

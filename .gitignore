@@ -2,7 +2,6 @@ src/utils_anviks/upcoming_features
 commands.md
 .idea/
 tests
-dist
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
