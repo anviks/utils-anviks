@@ -192,7 +192,7 @@ static PyObject* Cell_is_neighbour(const CellObject* self, PyObject* args) {
     } else if (strcmp(neighbour_type, "diagonal") == 0) {
         is_nb = row_diff == 1 && col_diff == 1;
     } else if (strcmp(neighbour_type, "all") == 0) {
-        is_nb = row_diff == 1 || col_diff == 1;
+        is_nb = row_diff == 1 && col_diff == 1 || row_diff + col_diff == 1;
     } else {
         RETURN_INVALID_NEIGHBOUR;
     }
