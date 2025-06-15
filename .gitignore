@@ -1,7 +1,10 @@
 src/utils_anviks/upcoming_features
 commands.md
 .idea/
-tests
+tests/*
+!tests/__init__.py
+!tests/conftest.py
+!tests/cell
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
