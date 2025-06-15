@@ -18,6 +18,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.optional-dependencies]
+dev = ["pytest", "build"]
+
 [tool.setuptools]
 ext-modules = [
     { name = "utils_anviks.cell", sources = ["src/utils_anviks/cell.c"] }
