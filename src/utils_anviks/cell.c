@@ -221,7 +221,7 @@ static PyObject* Cell_chebyshev_distance(const CellObject* self, PyObject* other
     if (!PyArg_Parse(other, "O!:chebyshev_distance", &CellType, &other_cell)) return NULL;
     const int a = abs(self->row - other_cell->row);
     const int b = abs(self->column - other_cell->column);
-    return PyLong_FromLong(max(a, b));
+    return PyLong_FromLong(a > b ? a : b);
 }
 
 static PyObject* Cell_neighbour_directions(PyObject* cls, PyObject* args) {
