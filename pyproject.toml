@@ -21,8 +21,10 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest", "build"]
 
-[tool.setuptools.extension."utils_anviks.cell"]
-sources = ["src/utils_anviks/cell.c"]
+[tool.setuptools]
+ext-modules = [
+    { name = "utils_anviks.cell", sources = ["src/utils_anviks/cell.c"] }
+]
 
 [project.urls]
 "Homepage" = "https://github.com/anviks/utils-anviks/"
