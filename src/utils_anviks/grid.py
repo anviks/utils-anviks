@@ -1,4 +1,4 @@
-from typing import Any, Callable, Generator, Generic, Literal, Protocol, Sequence, TypeVar, TypeIs
+from typing import Any, Callable, Generator, Generic, Literal, Protocol, Sequence, TypeVar, TypeGuard
 
 from .cell import Cell
 
@@ -16,7 +16,7 @@ R = TypeVar('R')
 Addable = TypeVar('Addable', bound=Add)
 
 
-def is_coord_sequence(obj: Any) -> TypeIs[Sequence[int]]:
+def is_coord_sequence(obj: Any) -> TypeGuard[Sequence[int]]:
     return isinstance(obj, Sequence) and len(obj) == 2 and isinstance(obj[0], int) and isinstance(obj[1], int)
 
 
