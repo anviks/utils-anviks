@@ -39,6 +39,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Merge artifacts
         uses: actions/upload-artifact/merge@v4
         with:
@@ -52,6 +55,7 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI
+        if: false
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
