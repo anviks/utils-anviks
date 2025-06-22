@@ -70,4 +70,3 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: "Release ${{ github.ref_name }}"
           body_path: "latest_changelog.md"
-          overwrite: true
