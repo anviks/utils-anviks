@@ -39,10 +39,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Merge artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: all-wheels
+          pattern: wheel-artifact-*
+
       - name: Download built wheels
         uses: actions/download-artifact@v4
         with:
-          pattern: wheel-artifact-*
+          name: all-wheels
           path: dist/
 
       - name: Publish to PyPI
