@@ -7,10 +7,10 @@ on:
 
 jobs:
   build-wheels:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -55,7 +55,6 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI
-        if: false
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Extract latest changelog entry (without version header)
