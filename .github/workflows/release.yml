@@ -55,15 +55,22 @@ jobs:
           path: dist/
 
       - name: Publish to PyPI
+        if: false
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Extract latest changelog entry (without version header)
         run: |
           awk '/^## \[/{if (p) exit; p=1; next} p' CHANGELOG.md > latest_changelog.md
 
+      - name: Extract version from tag
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
           tag_name: ${{ github.ref_name }}
-          name: "Release ${{ github.ref_name }}"
+          name: ${{ env.VERSION }}
           body_path: "latest_changelog.md"
