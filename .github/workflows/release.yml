@@ -6,8 +6,12 @@ on:
       - 'v*.*.*'
 
 jobs:
-  release:
+  build-wheels:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -19,10 +23,27 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          pip install build
+          pip install cibuildwheel
 
-      - name: Build package
-        run: python -m build
+      - name: Build wheels with cibuildwheel
+        run: cibuildwheel --output-dir wheelhouse
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: wheels
+          path: wheelhouse/
+
+  release-package:
+    needs: build-wheels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download built wheels
+        uses: actions/download-artifact@v3
+        with:
+          name: wheels
+          path: dist/
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
