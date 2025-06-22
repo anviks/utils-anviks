@@ -5,6 +5,7 @@ tests/*
 !tests/__init__.py
 !tests/conftest.py
 !tests/cell
+src/utils_anviks/include
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
