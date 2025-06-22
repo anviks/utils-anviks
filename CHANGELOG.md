@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
-- Fixed incorrect logic for determining whether a cell is a neighbour of another cell
+- Corrected the logic for determining whether a cell is a neighbour of another cell.
+- Grid.__setitem__ no longer throws an error, when empty list is passed.
 
 
 ## [2.1.0] - 2025-01-06

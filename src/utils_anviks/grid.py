@@ -110,6 +110,8 @@ class Grid(Generic[T]):
         elif isinstance(key, Cell):
             self.grid[key.row][key.column] = value
         elif isinstance(key, Sequence):
+            if len(key) == 0:
+                return
             if is_coord_sequence(key[0]):
                 for cell in key:
                     self.grid[cell[0]][cell[1]] = value
